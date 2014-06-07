@@ -12,6 +12,8 @@ import java.util.Set;
 /**
  * This is a class to map parts of speech to their followers. 
  * Right now it only works with 1-word pairings, but it should be able to do more than that.
+ * 
+ * To see its layout, run main.java.
  * @author Brooke
  *
  */

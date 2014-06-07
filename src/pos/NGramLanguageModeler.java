@@ -5,6 +5,7 @@ import java.util.Queue;
 
 /**
  * This class uses a contextModel and DocumentDictionary to create a paragraph.
+ * main.java runs it with a paragraph length of 20.
  * @author Brooke
  *
  */

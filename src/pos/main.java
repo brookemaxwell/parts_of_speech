@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class main {
 
 	/**
+	 * READ ME!
 	 * A DocumentDictionary is a count of all the keys with the words that follow. 
 	 * A ContextModel is an indication of what parts of speech follow what. 
 	 * Right now, it works for single-word context and nothing else (not even zero-word context) 

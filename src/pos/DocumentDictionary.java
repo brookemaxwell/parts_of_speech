@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 /**
  * This is a class to sort words into parts of speech with their occurrences. It maps a part of speech to words.
+ * To see its layout, run main.java.
  * @author Brooke
  *
  */
