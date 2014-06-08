@@ -17,20 +17,12 @@ import java.util.Set;
  * @author Brooke
  *
  */
-public class ContextModel{
+public class OneWordContextModel{
 
 	HashMap<String, ArrayList<WordNode>> model;
+	Random rand;
 	
-	private class WordNode{
-		String word;
-		int count;
-		WordNode(String s, int i){
-			word = s;
-			count = i;
-		}
-	}
-	
-	public ContextModel(File file) {
+	public OneWordContextModel(File file) {
 		Scanner scanner = null;
 		try {
 			scanner = new Scanner(file);
@@ -85,7 +77,7 @@ public class ContextModel{
 	}	
 	
 	public String getNextKey(String seedWord){
-		Random rand = new Random();
+		rand = new Random();
 		ArrayList<WordNode> words = null;
 		if(seedWord == null){
 			String key = "";
@@ -95,10 +87,30 @@ public class ContextModel{
 		}
 		/*get a word probabilitstically*/
 		
+		/*get a word probabilitstically. We will image that the words array is an array where each word node has been expanded..
+		 * For example, if we have WordNodes {"cat",4} {"dog",7}, then the first 4 items of the array would be cat and the next
+		 * 7 items would be dog.*/
 		
-		int randomIndex = rand.nextInt((words.size()));
-	    	
-		return words.get(randomIndex).word;
+		//get a count of the total number of words associated with that part of speech
+		int total =0;
+		for(WordNode curNode: words){
+			total+= curNode.count;
+		}
+		
+		//generate a random index from 0 to the total number of words
+		//the nextInt method is perfect for working with the array as 0 is inclusive and total is excluded
+		int randomIndex = rand.nextInt((total));
+
+		//get the word at that index
+		String randomlyPickedWord ="";	
+		for(WordNode curNode: words){
+			randomIndex-= curNode.count;
+			if(randomIndex <0){
+				randomlyPickedWord = curNode.word;
+				break;
+			}
+		}
+		return randomlyPickedWord;
 	}
 	
 	public LinkedList<String> getSeedWords(){

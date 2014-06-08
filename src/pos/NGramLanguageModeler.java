@@ -11,17 +11,16 @@ import java.util.Queue;
  */
 public class NGramLanguageModeler {
 	
-	ContextModel cm;
+
 	DocumentDictionary dd;
 	Queue<String> context;
 	
-	NGramLanguageModeler(ContextModel cm, DocumentDictionary dd){
+	NGramLanguageModeler(OneWordContextModel cm, DocumentDictionary dd){
 		this.dd = dd;
-		this.cm = cm;
 		context = new LinkedList<String>();
 	}
 	
-	public void run(int numOfWords){
+	public void runOneWordContextModel(	OneWordContextModel cm, int numOfWords){
 		//the dictionary is our model.
 		context = cm.getSeedWords();
 		
@@ -61,5 +60,22 @@ for i in range(100):
  
 print()
  */
+
+	public void runTwoWordContextModel(TwoWordContextModel tcm, int numOfWords) {
+		//the dictionary is our model.
+		context = tcm.getSeedWords();
+		
+		StringBuilder s = new StringBuilder();
+		for(int i = 0; i < numOfWords; i++){
+			String w1 = context.remove();
+			String w2 = context.peek();
+			String nextKey = tcm.getNextKey(w1,w2);
+			s.append(dd.getNextWord(nextKey));
+			s.append(" ");
+			context.add(nextKey);
+		}
+		
+		System.out.println(s.toString());
+	}
 
 }

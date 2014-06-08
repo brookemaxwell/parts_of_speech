@@ -14,6 +14,7 @@ public class main {
 	 * but it should be easy to add in the flexibility.
 	 * 
 	 * I didn't quickly figure out how to get the next word probabilistically, so I'm just doing random selection right now.
+	 * <Ian says> I did this
 	 * 
 	 * For speed purposes, we might need to have a "createModelAndDictionary" method somewhere that builds both at the same time
 	 * since each parses the file separately, so large files would become an issue, but that's not crucial yet.
@@ -22,14 +23,20 @@ public class main {
 	 */
 	public static void main(String[] args) {
 		
-		File f = new File("res\\little_test.txt");
+		File f = new File("res"+File.separator+"little_test.txt");
+		//File f = new File("res"+File.separator+"devtest.txt");
+		
 		DocumentDictionary dd = new DocumentDictionary(f);
 		System.out.println(dd.toString());
-		ContextModel cm = new ContextModel(f);
-		System.out.println(cm.toString());
+		OneWordContextModel ocm = new OneWordContextModel(f);
+		System.out.println(ocm.toString());
+		
+		TwoWordContextModel tcm = new TwoWordContextModel(f);
+		System.out.println(tcm.toString());
 
-		NGramLanguageModeler ng = new NGramLanguageModeler(cm, dd);
-		ng.run(20);//run(desiredLengthOfParagraph)
+		NGramLanguageModeler ng = new NGramLanguageModeler(ocm, dd);
+		ng.runOneWordContextModel(ocm, 20);//run(desiredLengthOfParagraph)
+		ng.runTwoWordContextModel(tcm, 20);
 		
 	}
 }
