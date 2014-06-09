@@ -39,7 +39,8 @@ public class main {
 		ng.runTwoWordContextModel(tcm, 20);
 		
 		Viterbi v = new Viterbi();
-		String[] obs = {"dizzy", "dizzy"};
+		//String[] obs = {"dizzy","dizzy","dizzy","cold" };
+		String[] obs = {"dizzy","dizzy","cold","cold" };
 		v.viterbi(obs);
 		
 	}

@@ -49,7 +49,7 @@ public class Viterbi {
 		emisProbHealth.put("normal", .5);
 		emisProbHealth.put("cold", .4);
 		emisProbHealth.put("dizzy", .1);
-		emission_probability.put("Healthy", transProbHealth);
+		emission_probability.put("Healthy", emisProbHealth);
 		HashMap<String, Double> emisProbFever =  new HashMap<>();
 		emisProbFever.put("normal", .1);
 		emisProbFever.put("cold", .3);
@@ -62,14 +62,19 @@ public class Viterbi {
 	public void viterbi( String[] obs){
 		ArrayList<HashMap<String, Double>> V = new ArrayList<>();//[{}];
 		HashMap<String, ArrayList<String>> path = new HashMap<>();
-	 
+		for(int t = 0; t< obs.length; t++){
+			V.add(new HashMap<String, Double>());
+		}
+		
 	    // Initialize base cases (t == 0)
 	    //for y in states:
 		for(int y =0; y<states.length; y++ ){
 			// V[0][y] = start_p[y] * emit_p[y][obs[0]]
 			String key = states[y];
-			double value = start_probability.get(key) * emission_probability.get(key).get(obs[0]);
+			double emisProb = getEmissionProb(key, obs[0]);
+			double value = start_probability.get(key) * emisProb;
 			V.get(0).put(key, value);
+			
 			//path[y] = [y]
 			ArrayList<String> temp =  new ArrayList<>();
 			temp.add(key);
@@ -114,7 +119,7 @@ public class Viterbi {
 	    //if len(obs)!=1:
 	    if(obs.length !=1){
 	    	// n = t
-	        n = obs.length;
+	        n = obs.length-1;
 	    }
 	    //print_dptable(V)
 	    //(prob, state) = max((V[n][y], y) for y in states)
@@ -128,6 +133,7 @@ public class Viterbi {
 	    	}
 	    	
 	    }
+	    System.out.println("cake!!!  "+ path.get(bestState));
 	    //return (prob, path[state])
 	 /*
 	# Don't study this, it just prints a table of the steps.
@@ -139,6 +145,21 @@ public class Viterbi {
 	        s += "\n"
 	    print(s)
 	*/
+	}
+
+
+	private double getEmissionProb(String key, String emission) {
+		HashMap<String, Double> probMap = emission_probability.get(key);
+		//^^^ CHANGE ME ^^^
+		if(probMap == null){
+			return .01;
+		}
+		Double prob = probMap.get(emission);
+		if(prob == null){
+			return .01;
+		}
+		
+		return prob;
 	}
 
 
