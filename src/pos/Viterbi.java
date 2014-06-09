@@ -5,52 +5,52 @@ import java.util.HashMap;
 
 public class Viterbi {
 
-	private String[] states = {"Healthy", "Fever"};
+	private Object[] states = {"Healthy", "Fever"};
 			 
-	private String[] observations = {"normal", "cold", "fever"};
+	private Object[] observations = {"normal", "cold", "fever"};
 			 
-	private HashMap<String, Double> start_probability;
+	private HashMap<Object, Double> start_probability;
 	//= {{"Healthy", 0.6}, {"Fever", 0.4}};
 			 
-	private HashMap<String, HashMap<String, Double>> transition_probability;
+	private HashMap<Object, HashMap<Object, Double>> transition_probability;
 	/*= {
 	{"Healthy", {"Healthy", 0.7, "Fever", 0.3},
 	  "Fever", {"Healthy", 0.4, "Fever", 0.6}}};
 	 */
 	
-		private HashMap<String, HashMap<String, Double>>  emission_probability;
+		private HashMap<Object, HashMap<Object, Double>>  emission_probability;
 		/*= {
 			   'Healthy' : {'normal': 0.5, 'cold': 0.4, 'dizzy': 0.1},
 			   'Fever' : {'normal': 0.1, 'cold': 0.3, 'dizzy': 0.6}
 			}*/
 	
 	public Viterbi(){
-		start_probability = new HashMap<String, Double>();
+		start_probability = new HashMap<Object, Double>();
 		//{"Healthy", 0.6}, {"Fever", 0.4}
 		start_probability.put("Healthy", .6);
 		start_probability.put("Fever", .4);
 		
-		transition_probability =  new HashMap<String, HashMap<String, Double>>();
+		transition_probability =  new HashMap<Object, HashMap<Object, Double>>();
 		/*"Healthy", {"Healthy", 0.7, "Fever", 0.3},
 	      "Fever", {"Healthy", 0.4, "Fever", 0.6};*/
-		HashMap<String, Double> transProbHealth =  new HashMap<>();
+		HashMap<Object, Double> transProbHealth =  new HashMap<>();
 		transProbHealth.put("Healthy", .7);
 		transProbHealth.put("Fever", .3);
 		transition_probability.put("Healthy", transProbHealth);
-		HashMap<String, Double> transProbFever =  new HashMap<>();
+		HashMap<Object, Double> transProbFever =  new HashMap<>();
 		transProbFever.put("Healthy", .4);
 		transProbFever.put("Fever", .6);
 		transition_probability.put("Fever", transProbFever);
 		
-		emission_probability=  new HashMap<String, HashMap<String, Double>>();
+		emission_probability=  new HashMap<Object, HashMap<Object, Double>>();
 		/*= 'Healthy' : {'normal': 0.5, 'cold': 0.4, 'dizzy': 0.1},
 			   'Fever' : {'normal': 0.1, 'cold': 0.3, 'dizzy': 0.6}*/
-		HashMap<String, Double> emisProbHealth =  new HashMap<>();
+		HashMap<Object, Double> emisProbHealth =  new HashMap<>();
 		emisProbHealth.put("normal", .5);
 		emisProbHealth.put("cold", .4);
 		emisProbHealth.put("dizzy", .1);
 		emission_probability.put("Healthy", emisProbHealth);
-		HashMap<String, Double> emisProbFever =  new HashMap<>();
+		HashMap<Object, Double> emisProbFever =  new HashMap<>();
 		emisProbFever.put("normal", .1);
 		emisProbFever.put("cold", .3);
 		emisProbFever.put("dizzy", .6);
@@ -59,24 +59,24 @@ public class Viterbi {
 	}
 		
 		
-	public void viterbi( String[] obs){
-		ArrayList<HashMap<String, Double>> V = new ArrayList<>();//[{}];
-		HashMap<String, ArrayList<String>> path = new HashMap<>();
+	public void viterbi( Object[] obs){
+		ArrayList<HashMap<Object, Double>> V = new ArrayList<>();//[{}];
+		HashMap<Object, ArrayList<Object>> path = new HashMap<>();
 		for(int t = 0; t< obs.length; t++){
-			V.add(new HashMap<String, Double>());
+			V.add(new HashMap<Object, Double>());
 		}
 		
 	    // Initialize base cases (t == 0)
 	    //for y in states:
 		for(int y =0; y<states.length; y++ ){
 			// V[0][y] = start_p[y] * emit_p[y][obs[0]]
-			String key = states[y];
+			Object key = states[y];
 			double emisProb = getEmissionProb(key, obs[0]);
 			double value = start_probability.get(key) * emisProb;
 			V.get(0).put(key, value);
 			
 			//path[y] = [y]
-			ArrayList<String> temp =  new ArrayList<>();
+			ArrayList<Object> temp =  new ArrayList<>();
 			temp.add(key);
 			path.put(key, temp);
 			
@@ -86,18 +86,18 @@ public class Viterbi {
 	    //for t in range(1, len(obs)):
 		for(int t = 1; t< obs.length; t++ ){
 	        //V.append({})
-			HashMap<String, Double> tempV = new HashMap<String, Double>();
-			HashMap<String, ArrayList<String>> newpath = new HashMap<>();
+			HashMap<Object, Double> tempV = new HashMap<Object, Double>();
+			HashMap<Object, ArrayList<Object>> newpath = new HashMap<>();
 
 			//for y in states:
 			for(int y =0; y<states.length; y++ ){
-	            String key = states[y];
-				String bestState= "";
+	            Object key = states[y];
+				Object bestState= "";
 				double bestProb = Double.NEGATIVE_INFINITY;
 				//(prob, state) = max((V[t-1][y0] * trans_p[y0][y] * emit_p[y][obs[t]], y0) for y0 in states)
 				//this loop handles the max
 				for(int y0 =0; y0<states.length; y0++ ){
-					String primeKey = states[y0];
+					Object primeKey = states[y0];
 					double prob = V.get(t-1).get(primeKey) * transition_probability.get(primeKey).get(key) * emission_probability.get(key).get(obs[t]);		
 					if(bestProb < prob){
 						bestProb = prob;
@@ -107,7 +107,7 @@ public class Viterbi {
 				// V[t][y] = prob
 				V.get(t).put(key, bestProb);
 			    //newpath[y] = path[state] + [y]		//I am guessing on what this is supposed to be doing
-				ArrayList<String> tempArrayList = listAdd(path.get(bestState), key);
+				ArrayList<Object> tempArrayList = listAdd(path.get(bestState), key);
 				newpath.put(key, tempArrayList);
 			}
 	            			 
@@ -124,7 +124,7 @@ public class Viterbi {
 	    //print_dptable(V)
 	    //(prob, state) = max((V[n][y], y) for y in states)
 	    double bestProb = Double.NEGATIVE_INFINITY;
-	    String bestState = "";
+	    Object bestState = "";
 	    for(int y =0; y< states.length; y++){
 	    	double curProb = V.get(n).get(states[y]);
 	    	if(bestProb < curProb){
@@ -148,14 +148,16 @@ public class Viterbi {
 	}
 
 
-	private double getEmissionProb(String key, String emission) {
-		HashMap<String, Double> probMap = emission_probability.get(key);
-		//^^^ CHANGE ME ^^^
+	private double getEmissionProb(Object key, Object emission) {
+		HashMap<Object, Double> probMap = emission_probability.get(key);
+		//^^^ CHANGE ME IF THIS IS NOT PROPER SMOOTHING ^^^
 		if(probMap == null){
+			System.out.println("The emission probablilty has not yet seen \"" + key+"\" as a part of speech");
 			return .01;
 		}
 		Double prob = probMap.get(emission);
 		if(prob == null){
+			System.out.println("The emission probablilty for the \"" + key+"\" part of speech has not seen the word: "+emission);
 			return .01;
 		}
 		
@@ -163,9 +165,9 @@ public class Viterbi {
 	}
 
 
-	private ArrayList<String> listAdd(ArrayList<String> arrayList, String key) {
-		ArrayList<String> list = new ArrayList<String>();
-		for(String cur: arrayList){
+	private ArrayList<Object> listAdd(ArrayList<Object> arrayList, Object key) {
+		ArrayList<Object> list = new ArrayList<Object>();
+		for(Object cur: arrayList){
 			list.add(cur);
 		}
 		list.add(key);

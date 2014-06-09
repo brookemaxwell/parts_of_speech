@@ -40,7 +40,7 @@ public class main {
 		
 		Viterbi v = new Viterbi();
 		//String[] obs = {"dizzy","dizzy","dizzy","cold" };
-		String[] obs = {"dizzy","dizzy","cold","cold" };
+		Object[] obs = {"dizzy","dizzy","cold","cold" };
 		v.viterbi(obs);
 		
 	}
