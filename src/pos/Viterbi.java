@@ -98,7 +98,7 @@ public class Viterbi {
 				//this loop handles the max
 				for(int y0 =0; y0<states.length; y0++ ){
 					Object primeKey = states[y0];
-					double prob = V.get(t-1).get(primeKey) * transition_probability.get(primeKey).get(key) * emission_probability.get(key).get(obs[t]);		
+					double prob = V.get(t-1).get(primeKey) * transition_probability.get(primeKey).get(key) * getEmissionProb(key, obs[t]);		
 					if(bestProb < prob){
 						bestProb = prob;
 						bestState = primeKey;
