@@ -61,7 +61,7 @@ public class Viterbi {
 		
 	public void viterbi( String[] obs){
 		ArrayList<HashMap<String, Double>> V = new ArrayList<>();//[{}];
-		HashMap<String, ArrayList<String>> path = new HashMap<>();
+		ArrayList<String> path = new ArrayList<String>();
 	 
 	    // Initialize base cases (t == 0)
 	    //for y in states:
@@ -71,18 +71,16 @@ public class Viterbi {
 			double value = start_probability.get(key) * emission_probability.get(key).get(obs[0]);
 			V.get(0).put(key, value);
 			//path[y] = [y]
-			ArrayList<String> temp =  new ArrayList<>();
-			temp.add(key);
-			path.put(key, temp);
+			path.add(y, key);
 			
 	    }
 	 
 	    // Run Viterbi for t > 0
 	    //for t in range(1, len(obs)):
-		for(int t = 1; t< obs.length; t++ ){
+		for(int t = 0; t< obs.length; t++ ){
 	        //V.append({})
 			HashMap<String, Double> tempV = new HashMap<String, Double>();
-			HashMap<String, ArrayList<String>> newpath = new HashMap<>();
+			ArrayList<String> newpath = new ArrayList<String>();
 
 			//for y in states:
 			for(int y =0; y<states.length; y++ ){
@@ -102,34 +100,21 @@ public class Viterbi {
 				// V[t][y] = prob
 				V.get(t).put(key, bestProb);
 			    //newpath[y] = path[state] + [y]		//I am guessing on what this is supposed to be doing
-				ArrayList<String> tempArrayList = listAdd(path.get(bestState), key);
-				newpath.put(key, tempArrayList);
+				//*** pick up here
+				//newpath = pythonListAdd(path, key);
 			}
 	            			 
 	        //Don't need to remember the old paths
-	        path = newpath;
+	        //path = newpath;
 		}
-		
-	    int n = 0;//           # if only one element is observed max is sought in the initialization values
-	    //if len(obs)!=1:
-	    if(obs.length !=1){
-	    	// n = t
-	        n = obs.length;
-	    }
-	    //print_dptable(V)
-	    //(prob, state) = max((V[n][y], y) for y in states)
-	    double bestProb = Double.NEGATIVE_INFINITY;
-	    String bestState = "";
-	    for(int y =0; y< states.length; y++){
-	    	double curProb = V.get(n).get(states[y]);
-	    	if(bestProb < curProb){
-	    		bestProb = curProb;
-	    		bestState =  states[y];
-	    	}
-	    	
-	    }
-	    //return (prob, path[state])
-	 /*
+		/*
+	    n = 0           # if only one element is observed max is sought in the initialization values
+	    if len(obs)!=1:
+	        n = t
+	    print_dptable(V)
+	    (prob, state) = max((V[n][y], y) for y in states)
+	    return (prob, path[state])
+	 
 	# Don't study this, it just prints a table of the steps.
 	def print_dptable(V):
 	    s = "    " + " ".join(("%7d" % i) for i in range(len(V))) + "\n"
@@ -139,16 +124,6 @@ public class Viterbi {
 	        s += "\n"
 	    print(s)
 	*/
-	}
-
-
-	private ArrayList<String> listAdd(ArrayList<String> arrayList, String key) {
-		ArrayList<String> list = new ArrayList<String>();
-		for(String cur: arrayList){
-			list.add(cur);
-		}
-		list.add(key);
-		return list;
 	}
 	
 }
