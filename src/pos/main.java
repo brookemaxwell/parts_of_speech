@@ -38,5 +38,9 @@ public class main {
 		ng.runOneWordContextModel(ocm, 20);//run(desiredLengthOfParagraph)
 		ng.runTwoWordContextModel(tcm, 20);
 		
+		Viterbi v = new Viterbi();
+		String[] obs = {"dizzy", "dizzy"};
+		v.viterbi(obs);
+		
 	}
 }
