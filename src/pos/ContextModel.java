@@ -17,7 +17,7 @@ import java.util.Set;
  * @author Brooke
  *
  */
-public class ContextModel{
+public abstract class ContextModel{
 
 	HashMap<Object, ArrayList<WordNode>> model;
 	Random rand;
@@ -40,9 +40,6 @@ public class ContextModel{
 		return .00001;
 	
 	}
-	/*public getStateProbabilities(){
-		HashMap<Object, Double> probs = 
-	}*/
 	
 	public Double getTransProbability(Object key, Object nextKey){
 		ArrayList<WordNode> words = model.get(key);
@@ -77,6 +74,20 @@ public class ContextModel{
 		}
 		
 		return key;
+	}
+	
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("ContextModel:");
+		for(Object key: model.keySet()){
+			sb.append("\n\t"+ key + " ("+keyOccurrences.get(key) + ")");
+			List<WordNode> wnList = model.get(key);
+			for(WordNode wn : wnList){
+				sb.append("\n\t\t"+ wn.word +"  "+ wn.count);
+			}
+			
+		}
+		return sb.toString();
 	}
 
 }

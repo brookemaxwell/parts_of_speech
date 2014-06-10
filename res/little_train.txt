@@ -1,0 +1,2 @@
+The_DT quick_JJ brown_JJ fox_N jumped_VBD over_IN the_DT lazy_JJ dogs_NNS
+The_DT quick_JJ brown_JJ fox_N jumped_VBD over_IN the_DT lazy_JJ dogs_NNS

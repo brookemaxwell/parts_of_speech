@@ -42,19 +42,21 @@ public class main {
 		ng.runOneWordContextModel(ocm, 20);//run(desiredLengthOfParagraph)
 		ng.runTwoWordContextModel(tcm, 20);
 		
-		Viterbi v = new Viterbi();
-		//String[] obs = {"dizzy","dizzy","dizzy","cold" };
-		Object[] obs = {"normal","dizzy","cold","cold" };
-		v.viterbi(obs);
 		*/
-		main m = new main();
-		m.runTest();
+		
+		Viterbi v = new Viterbi(new File("res"+File.separator+"little_train.txt"));
+		Object[] obs =  main.readFile(new File("res"+File.separator+"little_test.txt"));
+		v.printData(obs);
+		v.run(obs);
+		
+		/*main m = new main();
+		m.runTest();*/
 		
 	}
 	
 	public void runTest(){
 		int totalKeyOccurrences = 0;
-		ContextModel cm = new ContextModel(new File("res"+File.separator+"viterbi_train.txt"));
+		ContextModel cm = new OneWordContextModel(new File("res"+File.separator+"viterbi_train.txt"));
 		
 		HashMap<Object, Integer> cm_keyOccurrences = new HashMap<Object, Integer>();
 		cm_keyOccurrences.put("healthy", 60);
@@ -100,11 +102,11 @@ public class main {
 		
 		File f = new File("res"+File.separator+"viterbi_little_2.txt");
 		
-		ViterbiAdapted v = new ViterbiAdapted(cm, dd);
+		Viterbi v = new Viterbi(cm, dd);
 		v.run(readFile(f));
 	}
 	
-	private Object[] readFile(File file){
+	public static Object[] readFile(File file){
 		Scanner scanner = null;
 		try {
 			scanner = new Scanner(file);

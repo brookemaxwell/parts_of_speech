@@ -146,6 +146,8 @@ public class DocumentDictionary{
 
 	public Double getProbability(Object key, Object value){
 		double count = 0;
+		if(partsOfSpeech.get(key) == null)
+			return .01;
 		for(WordNode wn : partsOfSpeech.get(key)){
 			if(value.equals(wn.word))
 				count = wn.count;
