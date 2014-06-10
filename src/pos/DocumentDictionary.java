@@ -100,7 +100,43 @@ public class DocumentDictionary{
 		for(WordNode curNode: words){
 			randomIndex-= curNode.count;
 			if(randomIndex <0){
-				randomlyPickedWord = curNode.word;
+				randomlyPickedWord = curNode.word.toString();
+				break;
+			}
+		}
+		return randomlyPickedWord;
+	}
+	
+	public String getNextWord(TwoWordKey twKey){
+		rand = new Random();
+		
+		String seedWord = twKey.w2;
+		ArrayList<WordNode> words = null;
+		if(seedWord == null){
+			return "";
+		}else{
+			words = partsOfSpeech.get(seedWord);
+		}
+		/*get a word probabilistically. We will image that the words array is an array where each word node has been expanded..
+		 * For example, if we have WordNodes {"cat",4} {"dog",7}, then the first 4 items of the array would be cat and the next
+		 * 7 items would be dog.*/
+		
+		//get a count of the total number of words associated with that part of speech
+		int total =0;
+		for(WordNode curNode: words){
+			total+= curNode.count;
+		}
+		
+		//generate a random index from 0 to the total number of words
+		//the nextInt method is perfect for working with the array as 0 is inclusive and total is excluded
+		int randomIndex = rand.nextInt((total));
+
+		//get the word at that index
+		String randomlyPickedWord ="";	
+		for(WordNode curNode: words){
+			randomIndex-= curNode.count;
+			if(randomIndex <0){
+				randomlyPickedWord = curNode.word.toString();
 				break;
 			}
 		}
@@ -145,13 +181,22 @@ public class DocumentDictionary{
 
 
 	public Double getProbability(Object key, Object value){
-		double count = .5;
-		if(partsOfSpeech.get(key) == null)
-			return .01;
-		for(WordNode wn : partsOfSpeech.get(key)){
-			if(value.equals(wn.word))
-				count = wn.count;
+		double count = .25;
+		if(partsOfSpeech.get(key) == null){
+			if(key instanceof TwoWordKey){
+				key = ((TwoWordKey) key).w2;
+			}
 		}
+		if(!partsOfSpeech.containsKey(key)){
+			return .0001;
+		}
+		for(WordNode wn : partsOfSpeech.get(key)){
+			if(value.equals(wn.word)){
+				//System.out.println(key + "  " + value + wn.count / (double)posCounts.get(key));
+				count = wn.count;
+			}
+		}
+		//System.out.println(key + " and " + value + "\t" + count / (double)posCounts.get(key));
 		return count / (double)posCounts.get(key);
 	}
 

@@ -117,7 +117,7 @@ public class OneWordContextModel extends ContextModel{
 		for(WordNode curNode: words){
 			randomIndex-= curNode.count;
 			if(randomIndex <0){
-				randomlyPickedWord = curNode.word;
+				randomlyPickedWord = curNode.word.toString();
 				break;
 			}
 		}
@@ -130,24 +130,6 @@ public class OneWordContextModel extends ContextModel{
 		context.add("");
 		return context;
 	}
-	
-	
-	/*public String toString(){
-		StringBuilder sb = new StringBuilder();
-		sb.append("ContextModel:");
-		for(Object key: model.keySet()){
-			sb.append("\n\t"+ key + " ("+keyOccurrences.get(key) + ")");
-			List<WordNode> wnList = model.get(key);
-			for(WordNode wn : wnList){
-				sb.append("\n\t\t"+ wn.word +"  "+ wn.count);
-			}
-			
-		}
-		return sb.toString();
-	}*/
-
-
-
 
 	public boolean contains(String word) {
 		return false;

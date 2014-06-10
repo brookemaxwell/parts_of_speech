@@ -8,19 +8,25 @@ import java.util.Scanner;
 
 public class Viterbi {
 
-	private Object[] states; //parts of speech,
+	private Object[] startStates; //parts of speech,
+	private Object[] endStates; //parts of speech,
 	private ContextModel transition_model; //this is our contextModel (transitions)
 	private DocumentDictionary  emission_model; //this is our documentDictionary for the contextModel
 
-	public Viterbi(File f){
-		transition_model = new OneWordContextModel(f);
+	public Viterbi(File f, boolean twoWords){
+		if(twoWords)
+			transition_model = new TwoWordContextModel(f);
+		else
+			transition_model = new OneWordContextModel(f);
 		emission_model = new DocumentDictionary(f);
-		states = transition_model.getStates();
+		startStates = transition_model.getStartStates();
+		endStates = transition_model.getStartStates();
 	}
 	public Viterbi(ContextModel owcm, DocumentDictionary dd){
 		transition_model = owcm;
 		emission_model = dd;
-		states = owcm.getStates();
+		startStates = owcm.getStartStates();
+		endStates = owcm.getStartStates();
 		
 	}
 		
@@ -35,54 +41,57 @@ public class Viterbi {
 		
 		System.out.println(sb.toString());
 	}
-	public void run( Object[] obs){
-		ArrayList<HashMap<Object, Double>> V = new ArrayList<>();//[{}];
+	public ArrayList<Object> run( Object[] obs){
+		ArrayList<HashMap<Object, Double>> stateProbs = new ArrayList<>();//[{}];
 		HashMap<Object, ArrayList<Object>> path = new HashMap<>();
 		
 		for(int t = 0; t< obs.length; t++){
-			V.add(new HashMap<Object, Double>());
+			stateProbs.add(new HashMap<Object, Double>());
 		}
 	 
 	    // Initialize base cases (t == 0)
 	    //for y in states:
-		for(int y =0; y<states.length; y++ ){
+		for(int y =0; y<startStates.length; y++ ){
 			
-			Object key = states[y];
-			double value = transition_model.getStateProbability(key) * emission_model.getProbability(key, obs[0]);//get(key).get(obs[0]);
-			V.get(0).put(key, value);
-			
+			Object startState = startStates[y];
+			double value = .00001;
+			if(startState instanceof TwoWordKey && !((TwoWordKey) startState).w1.equals("")){}
+			else{
+				value = transition_model.getStateProbability(startState) * 
+						emission_model.getProbability(startState, obs[0]);
+			}
+			stateProbs.get(0).put(startState, value);
 			ArrayList<Object> temp =  new ArrayList<>();
-			temp.add(key);
-			path.put(key, temp);
+			temp.add(startState);
+			path.put(startState, temp);
 			
 	    }
 	 
 	    // Run Viterbi for t > 0
 		for(int t = 1; t< obs.length; t++ ){
-			
-			HashMap<Object, Double> tempV = new HashMap<Object, Double>();
 			HashMap<Object, ArrayList<Object>> newpath = new HashMap<>();
 
 			//for y in states:
-			for(int y =0; y<states.length; y++ ){
-				Object key = states[y];
+			for(int y =0; y<endStates.length; y++ ){
+				Object endState = endStates[y];
 				Object bestState= "";
 				double bestProb = Double.NEGATIVE_INFINITY;
 
 				//this loop handles the max
-				for(int y0 =0; y0<states.length; y0++ ){
-					Object primeKey = states[y0];
-					double prob = V.get(t-1).get(primeKey) * transition_model.getTransProbability(primeKey, key) * emission_model.getProbability(key, obs[t]);//get(key).get(obs[t]);	
+				for(int y0 =0; y0<startStates.length; y0++ ){
+					Object startState = startStates[y0];
+				
+					double prob = stateProbs.get(t-1).get(startState) * transition_model.getTransProbability(startState, endState) * emission_model.getProbability(endState, obs[t]);	
+					
 					if(bestProb < prob){
 						bestProb = prob;
-						bestState = primeKey;
+						bestState = startState;
 					}
 				}
 				
-				V.get(t).put(key, bestProb);
-
-				ArrayList<Object> tempArrayList = listAdd(path.get(bestState), key);
-				newpath.put(key, tempArrayList);
+				stateProbs.get(t).put(endState, bestProb);
+				ArrayList<Object> tempArrayList = listAdd(path.get(bestState), endState);
+				newpath.put(endState, tempArrayList);
 			}
 	            			 
 	        //Don't need to remember the old paths
@@ -97,17 +106,15 @@ public class Viterbi {
 
 	    double bestProb = Double.NEGATIVE_INFINITY;
 	    Object bestState = "";
-	    for(int y =0; y< states.length; y++){
-	    	double curProb = V.get(n).get(states[y]);
+	    for(int y =0; y< startStates.length; y++){
+	    	double curProb = stateProbs.get(n).get(startStates[y]);
 	    	if(bestProb < curProb){
 	    		bestProb = curProb;
-	    		bestState =  states[y];
+	    		bestState =  startStates[y];
 	    	}
-	    	
 	    }
-	    System.out.println("Best guess:  "+ path.get(bestState));
+	    return path.get(bestState);
 	}
-
 
 	private ArrayList<Object> listAdd(ArrayList<Object> arrayList, Object key) {
 		ArrayList<Object> list = new ArrayList<Object>();

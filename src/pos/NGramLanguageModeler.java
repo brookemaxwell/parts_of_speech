@@ -15,7 +15,7 @@ public class NGramLanguageModeler {
 	DocumentDictionary dd;
 	Queue<String> context;
 	
-	NGramLanguageModeler(OneWordContextModel cm, DocumentDictionary dd){
+	NGramLanguageModeler(DocumentDictionary dd){
 		this.dd = dd;
 		context = new LinkedList<String>();
 	}
@@ -43,10 +43,10 @@ public class NGramLanguageModeler {
 		for(int i = 0; i < numOfWords; i++){
 			String w1 = context.remove();
 			String w2 = context.peek();
-			String nextKey = tcm.getMostProbableNextKey(new TwoWordKey(w1,w2));
+			TwoWordKey nextKey = tcm.getMostProbableNextKey(new TwoWordKey(w1,w2));
 			s.append(dd.getNextWord(nextKey));
 			s.append(" ");
-			context.add(nextKey);
+			context.add(nextKey.w2);
 		}
 		
 		System.out.println(s.toString());

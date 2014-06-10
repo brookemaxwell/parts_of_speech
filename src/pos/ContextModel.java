@@ -1,13 +1,12 @@
 package pos;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.Set;
 /**
  * This is a class to map parts of speech to their followers. 
@@ -30,14 +29,26 @@ public abstract class ContextModel{
 		
 	}	
 	
-	public Object[] getStates(){
+	public Object[] getStartStates(){
 		return model.keySet().toArray();
+	}
+	
+	public Object[] getEndStates(){
+		Set list = new HashSet();
+		
+		for(ArrayList<WordNode> wnList: model.values()){
+			for(WordNode wn: wnList){
+				list.add(wn.word);
+			}
+		}
+		
+		return list.toArray();
 	}
 	
 	public Double getStateProbability(Object key){
 		if(keyOccurrences.keySet().contains(key))
 			return keyOccurrences.get(key) / (double) totalKeyOccurrences;
-		return .00001;
+		return .001;
 	
 	}
 	
@@ -48,7 +59,7 @@ public abstract class ContextModel{
 				return (double)wn.count / (double)keyOccurrences.get(key);
 			}
 		}
-		return .00001;
+		return .001;
 	
 	}
 	
@@ -62,8 +73,6 @@ public abstract class ContextModel{
 	}
 
 	public static String trim(String key) {
-		String temp = key;
-		
 		//makes the key lower case
 		key = key.toLowerCase();
 		

@@ -1,9 +1,9 @@
 package pos;
 
 public class WordNode{
-	String word;
+	Object word;
 	int count;
-	WordNode(String s, int i){
+	WordNode(Object s, int i){
 		word = s;
 		count = i;
 	}
