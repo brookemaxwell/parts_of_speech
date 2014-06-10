@@ -86,7 +86,8 @@ public class OneWordContextModel extends ContextModel{
 		return .00001;
 	}
 	
-	public String getNextKey(String seedWord){
+	@Override
+	public String getMostProbableNextKey(Object seedWord){
 		rand = new Random();
 		ArrayList<WordNode> words = null;
 		if(seedWord == null){
@@ -130,29 +131,8 @@ public class OneWordContextModel extends ContextModel{
 		return context;
 	}
 	
-	/**This method does two things:
-	 * 1)make the key lower case to avoid "RanDomWOrds" not being the same as "rANDOMWord"
-	   2) trims off non-letter characters at the begining and ending of words (so that "healing." is the same as "healing")
-	 * @param key
-	 * @return
-	 */
-	public static String trim(String key) {
-		String temp = key;
-		
-		//makes the key lower case
-		key = key.toLowerCase();
-		
-		//trim off the none letter characters
-		while(!key.equals("") && !Character.isLetter(key.charAt(0))){
-			key = key.substring(1);
-		}
-		while(!key.equals("") && !Character.isLetter(key.charAt(key.length()-1))){
-			key = key.substring(0, key.length()-1);
-		}
-		
-		return key;
-	}
-	public String toString(){
+	
+	/*public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("ContextModel:");
 		for(Object key: model.keySet()){
@@ -164,7 +144,7 @@ public class OneWordContextModel extends ContextModel{
 			
 		}
 		return sb.toString();
-	}
+	}*/
 
 
 

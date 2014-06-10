@@ -52,6 +52,8 @@ public abstract class ContextModel{
 	
 	}
 	
+	public abstract Object getMostProbableNextKey(Object seedWord);
+	
 	public LinkedList<String> getSeedWords(){
 		LinkedList<String> context = new LinkedList<String>();
 

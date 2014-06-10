@@ -16,35 +16,6 @@ import java.util.Set;
  *
  */
 public class TwoWordContextModel extends ContextModel{
-
-	private class TwoWordKey{
-		String w1;
-		String w2;
-		
-		private TwoWordKey(String _w1, String _w2){
-			this.w1 = _w1;
-			this.w2 = _w2;
-		}
-		public String toString(){
-			return "\""+w1+" & "+w2+"\"";
-		}
-		@Override
-		public int hashCode(){
-			return 31*w1.hashCode() + w2.hashCode();
-		}
-		
-		@Override
-		public boolean equals(Object other){
-			if(!(other instanceof TwoWordKey )){
-				return false;
-			}
-			TwoWordKey twk = (TwoWordKey) other;
-			if(w1.equals(twk.w1) && w2.equals(twk.w2)){
-				return true;
-			}
-			return false;
-		}
-	}
 	
 	public TwoWordContextModel(File file) {
 		super(file);
@@ -145,12 +116,14 @@ public class TwoWordContextModel extends ContextModel{
 		
 	}	
 	
-	public String getNextKey(String w1, String w2){
+	@Override
+	public String getMostProbableNextKey(Object object){
 		rand = new Random();
 		ArrayList<WordNode> words = null;
 		
-		TwoWordKey twKey = new TwoWordKey(w1,w2);
-		if(w1 == null || w2 == null){
+		TwoWordKey twKey = (TwoWordKey) object;
+		//TwoWordKey twKey = new TwoWordKey(w1,w2);
+		if(object == null){
 			twKey = new TwoWordKey("","");
 			words = model.get(twKey);
 		}else{
