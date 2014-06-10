@@ -17,9 +17,9 @@ import java.util.Scanner;
 public class DocumentDictionary{
 
 	/*An entry would be like NN->{{dog, 4}, {cat,5}}*/
-	HashMap<String, ArrayList<WordNode>> partsOfSpeech;
+	HashMap<Object, ArrayList<WordNode>> partsOfSpeech;
 	Random rand; 
-	
+	HashMap<Object, Integer> posCounts;
 	
 	
 	public DocumentDictionary(File file) {
@@ -31,7 +31,8 @@ public class DocumentDictionary{
 			e.printStackTrace();
 		}
 		
-		partsOfSpeech = new HashMap<String, ArrayList<WordNode>>();
+		partsOfSpeech = new HashMap<Object, ArrayList<WordNode>>();
+		posCounts = new HashMap<Object, Integer>();
 		
 		while(scanner.hasNext()){
 			
@@ -45,6 +46,7 @@ public class DocumentDictionary{
 			
 			if(partsOfSpeech.containsKey(key)){
 				ArrayList<WordNode> count = partsOfSpeech.get(key);
+				posCounts.put(key,  posCounts.get(key)+1);
 				boolean found = false;
 				for(WordNode wn: count){
 					if(wn.word.equals(word)){
@@ -61,6 +63,7 @@ public class DocumentDictionary{
 			else{
 				ArrayList<WordNode> newList = new ArrayList<WordNode>();
 				newList.add(new WordNode(word, 1));
+				posCounts.put(key,  1);
 				partsOfSpeech.put(key, newList);
 			}			
 		}
@@ -129,8 +132,8 @@ public class DocumentDictionary{
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("DocumentDictionary:");
-		for(String key: partsOfSpeech.keySet()){
-			sb.append("\n\t"+ key);
+		for(Object key: partsOfSpeech.keySet()){
+			sb.append("\n\t"+ key + " (" + posCounts.get(key) + ")");
 			List<WordNode> wnList = partsOfSpeech.get(key);
 			for(WordNode wn : wnList){
 				sb.append("\n\t\t"+ wn.word +"  "+ wn.count);
@@ -141,6 +144,14 @@ public class DocumentDictionary{
 	}
 
 
+	public Double getProbability(Object key, Object value){
+		double count = 0;
+		for(WordNode wn : partsOfSpeech.get(key)){
+			if(value.equals(wn.word))
+				count = wn.count;
+		}
+		return count / (double)posCounts.get(key);
+	}
 
 
 	public boolean contains(String word) {

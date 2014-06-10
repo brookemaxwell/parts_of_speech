@@ -17,12 +17,10 @@ import java.util.Set;
  * @author Brooke
  *
  */
-public class OneWordContextModel{
+public class OneWordContextModel extends ContextModel{
 
-	HashMap<String, ArrayList<WordNode>> model;
-	Random rand;
-	
 	public OneWordContextModel(File file) {
+		super(file);
 		Scanner scanner = null;
 		try {
 			scanner = new Scanner(file);
@@ -32,8 +30,6 @@ public class OneWordContextModel{
 			e.printStackTrace();
 			System.exit(0);
 		}
-		
-		model = new HashMap<String, ArrayList<WordNode>>();
 		
 		LinkedList<String> context = new LinkedList<String>();
 		context.add("");
@@ -48,11 +44,14 @@ public class OneWordContextModel{
 			String key = context.remove();
 			context.add(word);
 			
+			
 			if("".equals(word)){
 				continue;
 			}
+			totalKeyOccurrences++;
 			if(model.containsKey(key)){
 				ArrayList<WordNode> wnList = model.get(key);
+				keyOccurrences.put(key,  keyOccurrences.get(key) + 1); //increment the number of occurrences of the key
 				boolean found = false;
 				for(WordNode wn: wnList){
 					if(wn.word.equals(word)){
@@ -70,11 +69,22 @@ public class OneWordContextModel{
 				ArrayList<WordNode> newList = new ArrayList<WordNode>();
 				newList.add(new WordNode(word, 1));
 				model.put(key, newList);
+				keyOccurrences.put(key,  1);
 			}
 			
 		}
 		
 	}	
+	
+	public Double getProbability(String key, String word){
+		ArrayList<WordNode> words = model.get(key);
+		for(WordNode wn : words){
+			if(wn.word.equals(word)){
+				return (double)wn.count / (double)keyOccurrences.get(key);
+			}
+		}
+		return .00001;
+	}
 	
 	public String getNextKey(String seedWord){
 		rand = new Random();
@@ -145,8 +155,8 @@ public class OneWordContextModel{
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("ContextModel:");
-		for(String key: model.keySet()){
-			sb.append("\n\t"+ key);
+		for(Object key: model.keySet()){
+			sb.append("\n\t"+ key + " ("+keyOccurrences.get(key) + ")");
 			List<WordNode> wnList = model.get(key);
 			for(WordNode wn : wnList){
 				sb.append("\n\t\t"+ wn.word +"  "+ wn.count);

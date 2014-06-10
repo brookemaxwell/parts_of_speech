@@ -15,11 +15,8 @@ import java.util.Set;
  * This is a class to map parts of speech to their followers. 
  *
  */
-public class TwoWordContextModel{
+public class TwoWordContextModel extends ContextModel{
 
-	HashMap<TwoWordKey, ArrayList<WordNode>> model;
-	Random rand;
-	
 	private class TwoWordKey{
 		String w1;
 		String w2;
@@ -50,6 +47,7 @@ public class TwoWordContextModel{
 	}
 	
 	public TwoWordContextModel(File file) {
+		super(file);
 		HashSet<String> wordTypes = new HashSet<String>();
 		Scanner scanner = null;
 		try {
@@ -60,8 +58,6 @@ public class TwoWordContextModel{
 			e.printStackTrace();
 			System.exit(0);
 		}
-		
-		model = new HashMap<TwoWordKey, ArrayList<WordNode>>();
 		
 		LinkedList<String> context = new LinkedList<String>();
 		context.add("");
@@ -91,6 +87,7 @@ public class TwoWordContextModel{
 			wordTypes.add(key2);
 			if(model.containsKey(twKey)){
 				ArrayList<WordNode> wnList = model.get(twKey);
+				keyOccurrences.put(twKey,  keyOccurrences.get(twKey) + 1); //increment the number of occurrences of the key
 				boolean found = false;
 				for(WordNode wn: wnList){
 					if(wn.word.equals(word)){
@@ -108,6 +105,7 @@ public class TwoWordContextModel{
 				ArrayList<WordNode> newList = new ArrayList<WordNode>();
 				newList.add(new WordNode(word, 1));
 				model.put(twKey, newList);
+				keyOccurrences.put(twKey, 1); //increment the number of occurrences of the key
 			}
 			
 		}
@@ -133,7 +131,7 @@ public class TwoWordContextModel{
 		//"" is  is not a possible word type 
 		wordTypes.remove("");
 		
-		for(TwoWordKey curCombo: model.keySet()){
+		for(Object curCombo: model.keySet()){
 			ArrayList<WordNode> nodes = model.get(curCombo);
 			for(String wordType: wordTypes){
 				//check to see if this combo doesn't have the word type
@@ -216,8 +214,8 @@ public class TwoWordContextModel{
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("ContextModel:");
-		for(TwoWordKey key: model.keySet()){
-			sb.append("\n\t"+ key);
+		for(Object key: model.keySet()){
+			sb.append("\n\t"+ key + " ("+keyOccurrences.get(key) + ")");
 			List<WordNode> wnList = model.get(key);
 			for(WordNode wn : wnList){
 				sb.append("\n\t\t"+ wn.word +"  "+ wn.count);
