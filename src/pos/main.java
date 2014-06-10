@@ -14,16 +14,6 @@ public class main {
 	 * READ ME!
 	 * A DocumentDictionary is a count of all the keys with the words that follow. 
 	 * A ContextModel is an indication of what parts of speech follow what. 
-	 * Right now, it works for single-word context and nothing else (not even zero-word context) 
-	 * but it should be easy to add in the flexibility.
-	 * 
-	 * I didn't quickly figure out how to get the next word probabilistically, so I'm just doing random selection right now.
-	 * <Ian says> I did this
-	 * 
-	 * For speed purposes, we might need to have a "createModelAndDictionary" method somewhere that builds both at the same time
-	 * since each parses the file separately, so large files would become an issue, but that's not crucial yet.
-	 * 
-	 * Feel free to adapt any and all of the existing stuff, and good luck!
 	 */
 	public static void main(String[] args) {
 		
@@ -57,12 +47,12 @@ public class main {
 		System.out.println("Best Guess (Single) " + results);
 		System.out.println("Real Result " + arrayAsString(obs[1]));
 		
-		/*v = new Viterbi(new File("res"+File.separator+"little_train.txt"), true);
-		//v.printData(obs);
-		ArrayList<Object> guess = v.run(obs[0]);
+		v = new Viterbi(new File("res"+File.separator+"little_train.txt"), true);
+		v.printData(obs);
+		ArrayList<Object> guess = twoWordKeyToFinalResult(v.run(obs[0]));
 		
-		System.out.println("Best Guess (Double) "+twoWordKeyToFinalResult(guess));
-		System.out.println("Real Result " + arrayAsString(obs[1]));*/
+		System.out.println("Best Guess (Double) "+guess);
+		System.out.println("Real Result " + arrayAsString(obs[1]));
 		
 	}
 	
