@@ -74,7 +74,6 @@ public class OneWordContextModel extends ContextModel{
 			}
 			
 		}
-		model.remove("");
 	}	
 	
 	public Double getProbability(String key, String word){
