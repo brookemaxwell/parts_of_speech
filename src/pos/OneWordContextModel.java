@@ -72,7 +72,7 @@ public class OneWordContextModel extends ContextModel{
 				model.put(key, newList);
 				keyOccurrences.put(key,  1);
 			}
-			
+		
 		}
 	}	
 	

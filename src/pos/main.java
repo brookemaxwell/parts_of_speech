@@ -18,6 +18,7 @@ public class main {
 	public static void main(String[] args) {
 		
 		main m = new main();
+		m.runLanguageModel(new File("res"+File.separator+"little_train.txt"));
 		m.runViterbi();
 		
 	}

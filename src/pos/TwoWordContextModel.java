@@ -67,20 +67,21 @@ public class TwoWordContextModel extends ContextModel{
 					}
 				}
 				if(!found)
-					wnList.add(new WordNode(new TwoWordKey(twKey.w2, word), 1));
+					wnList.add(new WordNode(word, 1));
 				
 			}
 			else{
 				ArrayList<WordNode> newList = new ArrayList<WordNode>();
-				newList.add(new WordNode(new TwoWordKey(twKey.w2, word), 1));
+				newList.add(new WordNode(word, 1));
 				model.put(twKey, newList);
 				keyOccurrences.put(twKey, 1); //increment the number of occurrences of the key
 			}
 		}
+		System.out.println("here");
 	}	
 	
 	@Override
-	public TwoWordKey getMostProbableNextKey(Object object){
+	public String getMostProbableNextKey(Object object){
 		rand = new Random();
 		ArrayList<WordNode> words = null;
 		
@@ -103,11 +104,11 @@ public class TwoWordContextModel extends ContextModel{
 		int randomIndex = rand.nextInt((total));
 
 		//get the word at that index
-		TwoWordKey randomlyPickedWord =new TwoWordKey("","");	
+		String randomlyPickedWord ="";
 		for(WordNode curNode: words){
 			randomIndex-= curNode.count;
 			if(randomIndex <0){
-				randomlyPickedWord = (TwoWordKey)curNode.word;
+				randomlyPickedWord = curNode.word;
 				break;
 			}
 		}
