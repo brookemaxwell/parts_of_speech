@@ -40,33 +40,39 @@ public class main {
 		Viterbi v = new Viterbi(new File("res"+File.separator+"allTraining.txt"), false);
 		String[][] obs =  main.readFile(new File("res"+File.separator+"little_test.txt"));
 		System.out.println("...done reading files");
-	
+		
 		v.printData(obs[0]);
-		System.out.println("running viterbi single...");
+		//System.out.println("running viterbi single...");
 		ArrayList<Object> results = v.run(obs[0]);
-		System.out.println("Best Guess (Single) " + results);
-		System.out.println("Real Result " + arrayAsString(obs[1]));
+		ArrayList<String> correct = objArrayToStringArrayList(obs[1]);
+		
+		ConfusionMatrix confusionMatrix = new ConfusionMatrix(v.getContextModel());
+		confusionMatrix.generate(correct, results);
+		System.out.println("Best Guess (Single) :" + results);
+		System.out.println("        Real Result :" + correct);
+		System.out.println("\nPrinting bigram confusion matrix:\n\n"+ confusionMatrix+"\n\n\n");
+		
 		
 		v = new Viterbi(new File("res"+File.separator+"little_train.txt"), true);
 		v.printData(obs);
 		ArrayList<Object> guess = twoWordKeyToFinalResult(v.run(obs[0]));
-		
+		ConfusionMatrix confusionMatrix2 = new ConfusionMatrix(v.getContextModel());
+		confusionMatrix2.generate(correct, guess);
 		System.out.println("Best Guess (Double) "+guess);
-		System.out.println("Real Result " + arrayAsString(obs[1]));
+		System.out.println("Real Result " + objArrayToStringArrayList(obs[1]));
+		System.out.println("\nPrinting trigram confusion matrix:\n\n"+ confusionMatrix2+"\n\n\n");
+		
 		
 	}
 	
-	public static String arrayAsString(Object[] obs){
-		StringBuilder sb = new StringBuilder();
-		sb.append("[");
-		for(int i = 0; i < obs.length-1; i++){
-			sb.append(obs[i]);
-			sb.append(", ");
+	public static ArrayList<String> objArrayToStringArrayList(Object[] obs){
+		ArrayList<String> list = new ArrayList<String>();
+		for(int i = 0; i < obs.length; i++){
+			list.add((String) obs[i]);
 		}
-		sb.append(obs[obs.length-1]);
-		sb.append("]");
-		return sb.toString();
+		return list;
 	}
+	
 	public static ArrayList<Object> twoWordKeyToFinalResult(ArrayList<Object> obs){
 		ArrayList<Object> result = new ArrayList<Object>();
 		for(int i = 0; i < obs.size(); i++){

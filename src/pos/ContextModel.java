@@ -100,5 +100,7 @@ public abstract class ContextModel{
 		}
 		return sb.toString();
 	}
+	
+	public abstract HashSet<String> getWordTypes();
 
 }

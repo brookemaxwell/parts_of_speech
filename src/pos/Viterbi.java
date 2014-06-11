@@ -124,5 +124,8 @@ public class Viterbi {
 		list.add(key);
 		return list;
 	}
-	
+	public ContextModel getContextModel() {
+		return transition_model;
+	}
+
 }

@@ -17,9 +17,11 @@ import java.util.Set;
  */
 public class TwoWordContextModel extends ContextModel{
 	
+	HashSet<String> wordTypes;
+	
 	public TwoWordContextModel(File file) {
 		super(file);
-		HashSet<String> wordTypes = new HashSet<String>();
+		wordTypes = new HashSet<String>();
 		Scanner scanner = null;
 		try {
 			scanner = new Scanner(file);
@@ -118,6 +120,11 @@ public class TwoWordContextModel extends ContextModel{
 		context.add("");
 		context.add("");
 		return context;
+	}
+
+	@Override
+	public HashSet<String> getWordTypes() {
+		return wordTypes;
 	}
 
 }

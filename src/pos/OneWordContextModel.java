@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -73,7 +74,7 @@ public class OneWordContextModel extends ContextModel{
 			}
 			
 		}
-		
+		model.remove("");
 	}	
 	
 	public Double getProbability(String key, String word){
@@ -134,5 +135,16 @@ public class OneWordContextModel extends ContextModel{
 	public boolean contains(String word) {
 		return false;
 		//return wordCounts.containsKey(word);
+	}
+
+	@Override
+	public HashSet<String> getWordTypes() {
+		Set<Object> tempSet = model.keySet();
+		HashSet<String> wordTypes = new HashSet<String>();
+		for(Object obj: tempSet){
+			String s = (String) obj;
+			wordTypes.add(s);
+		}
+		return wordTypes;
 	}
 }
