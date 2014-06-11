@@ -43,10 +43,10 @@ public class NGramLanguageModeler {
 		for(int i = 0; i < numOfWords; i++){
 			String w1 = context.remove();
 			String w2 = context.peek();
-			TwoWordKey nextKey = tcm.getMostProbableNextKey(new TwoWordKey(w1,w2));
+			String nextKey = tcm.getMostProbableNextKey(new TwoWordKey(w1,w2));
 			s.append(dd.getNextWord(nextKey));
 			s.append(" ");
-			context.add(nextKey.w2);
+			context.add(nextKey);
 		}
 		
 		System.out.println(s.toString());
