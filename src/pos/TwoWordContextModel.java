@@ -111,7 +111,6 @@ public class TwoWordContextModel extends ContextModel{
 				break;
 			}
 		}
-		System.out.println(twKey + " then " + randomlyPickedWord);
 		return randomlyPickedWord;
 	}
 	

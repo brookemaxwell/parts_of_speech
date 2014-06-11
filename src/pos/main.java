@@ -19,11 +19,13 @@ public class main {
 		
 		main m = new main();
 		m.runViterbi();
+		//File f = new File("res" + File.separator + "frost_poems.txt");
+		//m.runLanguageModel(f);
 		
 	}
 	
 	public void runLanguageModel(File f){
-		int numOfWords = 20;
+		int numOfWords = 15;
 		
 		OneWordContextModel cm = new OneWordContextModel(f);
 		TwoWordContextModel cm2 = new TwoWordContextModel(f);
@@ -37,8 +39,8 @@ public class main {
 	
 	public void runViterbi(){
 		System.out.print("reading files...");
-		Viterbi v = new Viterbi(new File("res"+File.separator+"allTraining.txt"), false);
-		String[][] obs =  main.readFile(new File("res"+File.separator+"little_test.txt"));
+		Viterbi v = new Viterbi(new File("res"+File.separator+"frost_poems.txt"), false);
+		String[][] obs =  main.readFile(new File("res"+File.separator+"frost_test.txt"));
 		System.out.println("...done reading files");
 		
 		v.printData(obs[0]);
@@ -53,7 +55,7 @@ public class main {
 		System.out.println("\nPrinting bigram confusion matrix:\n\n"+ confusionMatrix+"\n\n\n");
 		
 		
-		v = new Viterbi(new File("res"+File.separator+"little_train.txt"), true);
+		v = new Viterbi(new File("res"+File.separator+"frost_poems.txt"), true);
 		v.printData(obs);
 		ArrayList<Object> guess = twoWordKeyToFinalResult(v.run(obs[0]));
 		ConfusionMatrix confusionMatrix2 = new ConfusionMatrix(v.getContextModel());
